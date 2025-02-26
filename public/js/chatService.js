@@ -206,6 +206,8 @@ class ChatService {
             robotContainer.style.display = 'none';
             chatContainer.style.display = 'none';
             this.showClickerButton();
+            // Activer le gain d'argent automatique
+            window.gameState.autoIncomeActive = true;
         }, 2000);
     }
 
@@ -689,6 +691,9 @@ class ChatService {
         if (window.gameState.money >= 60000 && !this.hasTriggeredThirdUpgrade && this.hasTriggeredSecondUpgrade) {
             this.hasTriggeredThirdUpgrade = true;
 
+            // Désactiver le gain d'argent automatique
+            window.gameState.autoIncomeActive = false;
+
             // Cacher le bouton clicker
             const clickerButton = document.getElementById('clickerButton');
             clickerButton.style.display = 'none';
@@ -718,6 +723,9 @@ class ChatService {
 
         if (window.gameState.money >= 25000 && !this.hasTriggeredSecondUpgrade && this.hasTriggeredFirstUpgrade) {
             this.hasTriggeredSecondUpgrade = true;
+
+            // Désactiver le gain d'argent automatique
+            window.gameState.autoIncomeActive = false;
 
             // Cacher le bouton clicker
             const clickerButton = document.getElementById('clickerButton');
@@ -749,6 +757,9 @@ class ChatService {
         // Vérification existante pour le premier upgrade
         if (window.gameState.money >= 15000 && !this.hasTriggeredFirstUpgrade) {
             this.hasTriggeredFirstUpgrade = true;
+
+            // Désactiver le gain d'argent automatique
+            window.gameState.autoIncomeActive = false;
 
             // Cacher le bouton clicker
             const clickerButton = document.getElementById('clickerButton');

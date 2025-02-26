@@ -118,7 +118,8 @@
         window.gameState = {
             money: 10000,
             perSecond: 100,
-            hasUpgrade: false
+            hasUpgrade: false,
+            autoIncomeActive: false  // Désactivé au début car la chatbox est visible
         };
 
         window.formatNumber = function (num) {
@@ -137,10 +138,12 @@
             document.getElementById('perSecondDisplay').textContent = `+${formatNumber(gameState.perSecond)}/s`;
         }
 
-        // Modifier la boucle de jeu pour vérifier les upgrades
+        // Modifier la boucle de jeu pour vérifier si le gain automatique est actif
         setInterval(() => {
-            gameState.money += gameState.perSecond;
-            updateDisplay();
+            if (window.gameState.autoIncomeActive) {
+                gameState.money += gameState.perSecond;
+                updateDisplay();
+            }
         }, 1000);
 
         // Initialisation
@@ -152,6 +155,11 @@
             setTimeout(() => {
                 chatService.playDialogue('welcome');
             }, 2500);
+        });
+
+        // Après l'initialisation du chat, activer le gain automatique quand le robot part
+        chatService.onRobotExit(() => {
+            window.gameState.autoIncomeActive = true;
         });
     </script>
 </body>
