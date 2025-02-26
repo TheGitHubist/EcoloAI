@@ -9,11 +9,6 @@ class ChatService {
         this.hasTriggeredFirstUpgrade = false;
         this.hasTriggeredSecondUpgrade = false;
         this.hasTriggeredThirdUpgrade = false;
-        this.isRobiPresent = true;
-
-        // Informer le jeu que Robi est présent
-        window.gameState.isRobiPresent = true;
-
         this.dialogues = {
             welcome: [
                 "Hey! 👋 Je suis ROBI, ton nouvel assistant personnel!",
@@ -202,18 +197,16 @@ class ChatService {
         const robotContainer = document.querySelector('.robot-container');
         const chatContainer = document.querySelector('.chat-container');
 
+        // Ajouter la classe pour l'animation de sortie
         robotContainer.classList.add('exit');
         chatContainer.classList.add('exit');
 
-        // Afficher le bouton clicker après le départ de Robi
+        // Nettoyer les éléments après l'animation et afficher le bouton clicker
         setTimeout(() => {
-            const clickerButton = document.getElementById('clickerButton');
-            if (clickerButton) clickerButton.style.display = 'block';
-
-            // Indiquer que Robi n'est plus présent
-            this.isRobiPresent = false;
-            window.gameState.isRobiPresent = false;
-        }, 1000);
+            robotContainer.style.display = 'none';
+            chatContainer.style.display = 'none';
+            this.showClickerButton();
+        }, 2000);
     }
 
     showClickerButton() {
@@ -696,10 +689,6 @@ class ChatService {
         if (window.gameState.money >= 60000 && !this.hasTriggeredThirdUpgrade && this.hasTriggeredSecondUpgrade) {
             this.hasTriggeredThirdUpgrade = true;
 
-            // Indiquer que Robi est présent
-            this.isRobiPresent = true;
-            window.gameState.isRobiPresent = true;
-
             // Cacher le bouton clicker
             const clickerButton = document.getElementById('clickerButton');
             clickerButton.style.display = 'none';
@@ -730,10 +719,6 @@ class ChatService {
         if (window.gameState.money >= 25000 && !this.hasTriggeredSecondUpgrade && this.hasTriggeredFirstUpgrade) {
             this.hasTriggeredSecondUpgrade = true;
 
-            // Indiquer que Robi est présent
-            this.isRobiPresent = true;
-            window.gameState.isRobiPresent = true;
-
             // Cacher le bouton clicker
             const clickerButton = document.getElementById('clickerButton');
             clickerButton.style.display = 'none';
@@ -761,12 +746,9 @@ class ChatService {
             return;
         }
 
+        // Vérification existante pour le premier upgrade
         if (window.gameState.money >= 15000 && !this.hasTriggeredFirstUpgrade) {
             this.hasTriggeredFirstUpgrade = true;
-
-            // Indiquer que Robi est présent
-            this.isRobiPresent = true;
-            window.gameState.isRobiPresent = true;
 
             // Cacher le bouton clicker
             const clickerButton = document.getElementById('clickerButton');
