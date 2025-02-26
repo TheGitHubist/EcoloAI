@@ -564,17 +564,12 @@ class ChatService {
     }
 
     showNextMessage() {
-        if (!this.currentDialogue || this.currentMessageIndex >= this.currentDialogue.length) {
+        // Si on a fini tous les messages du dialogue actuel
+        if (this.currentMessageIndex >= this.currentDialogue.length) {
+            // Cas spéciaux pour les dialogues d'upgrade
             if (this.currentDialogue === this.dialogues.firstUpgrade) {
                 this.showUpgradeChoices();
                 this.nextButton.style.display = 'none'; // Cacher le bouton pendant les choix
-                return;
-            } else if (this.currentDialogue === this.dialogues.ecoTrap) {
-                // Si c'est la fin du dialogue ecoTrap, forcer l'achat de la machine rapide
-                window.gameState.money -= 12000;
-                window.gameState.perSecond += 200;
-                window.updateDisplay();
-                this.robotExit();
                 return;
             } else if (this.currentDialogue === this.dialogues.secondUpgrade) {
                 this.showUpgradeChoicesSecond();
@@ -595,7 +590,10 @@ class ChatService {
                 }, 1000);
             } else {
                 // Si c'est la fin du dernier dialogue (tutorial), faire partir le robot
-                this.robotExit();
+                // MAIS seulement si on n'est pas dans un dialogue spécial
+                if (!this.isSpecialDialogue()) {
+                    this.robotExit();
+                }
             }
 
             if (this.currentDialogue === this.dialogues.acceptThirdUpgrade) {
@@ -614,6 +612,18 @@ class ChatService {
         // Afficher le bouton suivant après chaque message
         this.nextButton.style.display = 'block';
         this.nextButton.classList.add('visible');
+    }
+
+    // Nouvelle méthode pour vérifier si on est dans un dialogue spécial
+    isSpecialDialogue() {
+        // Liste des dialogues qui ne doivent pas déclencher la sortie de Robi
+        const specialDialogues = [
+            this.dialogues.ecoTrap,
+            this.dialogues.acceptSecondUpgrade,
+            this.dialogues.acceptThirdUpgrade
+        ];
+
+        return specialDialogues.includes(this.currentDialogue);
     }
 
     // Nouvelle méthode pour passer tous les dialogues
@@ -680,18 +690,22 @@ class ChatService {
             const robotContainer = document.querySelector('.robot-container');
             const chatContainer = document.querySelector('.chat-container');
 
+            // Vider le contenu de la chatbox
+            this.messageContainer.innerHTML = '';
+
             robotContainer.style.display = 'block';
             robotContainer.style.animation = 'robotEnter 2s ease-out forwards';
             robotContainer.classList.remove('exit');
 
-            chatContainer.style.display = 'block';
-            chatContainer.style.animation = 'chatAppear 1s ease-out forwards';
-            chatContainer.classList.remove('exit');
-
-            // Lancer le nouveau dialogue
+            // Afficher le chat seulement après l'animation de Robi
+            chatContainer.style.display = 'none';
             setTimeout(() => {
+                chatContainer.style.display = 'block';
+                chatContainer.style.animation = 'chatAppear 1s ease-out forwards';
+                chatContainer.classList.remove('exit');
+                // Lancer le nouveau dialogue
                 this.playDialogue('thirdUpgrade');
-            }, 2500);
+            }, 2000); // Attendre que Robi soit presque arrivé
             return;
         }
 
@@ -706,18 +720,22 @@ class ChatService {
             const robotContainer = document.querySelector('.robot-container');
             const chatContainer = document.querySelector('.chat-container');
 
+            // Vider le contenu de la chatbox
+            this.messageContainer.innerHTML = '';
+
             robotContainer.style.display = 'block';
             robotContainer.style.animation = 'robotEnter 2s ease-out forwards';
             robotContainer.classList.remove('exit');
 
-            chatContainer.style.display = 'block';
-            chatContainer.style.animation = 'chatAppear 1s ease-out forwards';
-            chatContainer.classList.remove('exit');
-
-            // Lancer le nouveau dialogue
+            // Afficher le chat seulement après l'animation de Robi
+            chatContainer.style.display = 'none';
             setTimeout(() => {
+                chatContainer.style.display = 'block';
+                chatContainer.style.animation = 'chatAppear 1s ease-out forwards';
+                chatContainer.classList.remove('exit');
+                // Lancer le nouveau dialogue
                 this.playDialogue('secondUpgrade');
-            }, 2500);
+            }, 2000); // Attendre que Robi soit presque arrivé
             return;
         }
 
@@ -733,18 +751,22 @@ class ChatService {
             const robotContainer = document.querySelector('.robot-container');
             const chatContainer = document.querySelector('.chat-container');
 
+            // Vider le contenu de la chatbox
+            this.messageContainer.innerHTML = '';
+
             robotContainer.style.display = 'block';
             robotContainer.style.animation = 'robotEnter 2s ease-out forwards';
             robotContainer.classList.remove('exit');
 
-            chatContainer.style.display = 'block';
-            chatContainer.style.animation = 'chatAppear 1s ease-out forwards';
-            chatContainer.classList.remove('exit');
-
-            // Lancer le nouveau dialogue
+            // Afficher le chat seulement après l'animation de Robi
+            chatContainer.style.display = 'none';
             setTimeout(() => {
+                chatContainer.style.display = 'block';
+                chatContainer.style.animation = 'chatAppear 1s ease-out forwards';
+                chatContainer.classList.remove('exit');
+                // Lancer le nouveau dialogue
                 this.playDialogue('firstUpgrade');
-            }, 2500);
+            }, 2000); // Attendre que Robi soit presque arrivé
         }
     }
 
