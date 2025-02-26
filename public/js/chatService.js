@@ -145,6 +145,11 @@ class ChatService {
                 document.body.appendChild(valueDisplay);
                 setTimeout(() => valueDisplay.remove(), 1000);
             }
+
+            // Nouvelle fonctionnalité: Alt + C pour afficher cinema.jpg
+            if (e.altKey && e.key.toLowerCase() === 'c') {
+                this.showCinemaMode();
+            }
         });
     }
 
@@ -474,11 +479,88 @@ class ChatService {
             if (ecoButton) ecoButton.remove();
             if (fixedContainer) fixedContainer.remove();
 
-            // Message de confirmation sans faire partir le robot
+            // Message de confirmation sans timer pour la transition
             this.playDialogue('acceptThirdUpgrade');
         } else {
             this.addMessage("Il te manque encore un peu d'argent! Continue à produire! 💪");
         }
+    }
+
+    showFinalTransition() {
+        // Créer l'overlay de transition
+        const overlay = document.createElement('div');
+        overlay.className = 'final-transition-overlay';
+        document.body.appendChild(overlay);
+
+        // Créer le conteneur avec l'image en mosaïque
+        const finalImage = document.createElement('div');
+        finalImage.className = 'final-image';
+        document.body.appendChild(finalImage);
+
+        // Créer une nouvelle chatbox dédiée au message final
+        const finalChatbox = document.createElement('div');
+        finalChatbox.className = 'final-chatbox';
+        finalChatbox.style.position = 'fixed';
+        finalChatbox.style.bottom = '100px';
+        finalChatbox.style.left = '50%';
+        finalChatbox.style.transform = 'translateX(-50%)';
+        finalChatbox.style.width = '600px';
+        finalChatbox.style.padding = '30px';
+        finalChatbox.style.background = 'rgba(0, 0, 0, 0.9)';
+        finalChatbox.style.borderRadius = '20px';
+        finalChatbox.style.border = '3px solid rgba(255, 255, 255, 0.5)';
+        finalChatbox.style.boxShadow = '0 0 50px rgba(0, 0, 0, 0.9)';
+        finalChatbox.style.zIndex = '20000'; // Z-index très élevé
+        finalChatbox.style.opacity = '0';
+        finalChatbox.style.transition = 'opacity 1s ease-in-out';
+        document.body.appendChild(finalChatbox);
+
+        // Déclencher les animations
+        setTimeout(() => {
+            overlay.classList.add('active');
+
+            // Afficher l'image finale juste avant que l'overlay ne remonte
+            setTimeout(() => {
+                // Cacher tous les éléments du jeu
+                document.querySelectorAll('.robot-container, .score-container, .clicker-button, .chat-container')
+                    .forEach(el => el.style.display = 'none');
+
+                finalImage.style.opacity = '1';
+                finalImage.classList.add('zoom-effect');
+
+                // Faire remonter l'overlay immédiatement après
+                overlay.classList.add('exit');
+
+                // Afficher la chatbox finale avec le message
+                setTimeout(() => {
+                    finalChatbox.style.opacity = '1';
+                    this.typeWriterEffect(finalChatbox, "On est juste une goutte d'eau dans l'océan... 💧🌊");
+                }, 1000);
+            }, 1000);
+        }, 100);
+    }
+
+    // Méthode d'effet machine à écrire pour le message final
+    typeWriterEffect(element, text, speed = 50) {
+        const messageElement = document.createElement('div');
+        messageElement.style.fontSize = '28px';
+        messageElement.style.color = 'white';
+        messageElement.style.textShadow = '0 0 15px rgba(255, 255, 255, 0.5)';
+        messageElement.style.background = 'rgba(0, 0, 0, 0.7)';
+        messageElement.style.padding = '20px';
+        messageElement.style.borderRadius = '20px';
+        messageElement.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+        element.appendChild(messageElement);
+
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                messageElement.textContent += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            }
+        }
+        type();
     }
 
     showNextMessage() {
@@ -515,6 +597,13 @@ class ChatService {
                 // Si c'est la fin du dernier dialogue (tutorial), faire partir le robot
                 this.robotExit();
             }
+
+            if (this.currentDialogue === this.dialogues.acceptThirdUpgrade) {
+                // Lancer la transition finale quand le dernier message est terminé
+                this.showFinalTransition();
+                return;
+            }
+
             return;
         }
 
@@ -657,5 +746,38 @@ class ChatService {
                 this.playDialogue('firstUpgrade');
             }, 2500);
         }
+    }
+
+    // Nouvelle méthode pour afficher le mode cinéma
+    showCinemaMode() {
+        // Supprimer tous les éléments existants
+        document.body.innerHTML = '';
+
+        // Changer le style du body
+        document.body.style.margin = '0';
+        document.body.style.padding = '0';
+        document.body.style.overflow = 'hidden';
+        document.body.style.backgroundColor = 'black';
+
+        // Créer l'élément d'image en plein écran
+        const cinemaImage = document.createElement('div');
+        cinemaImage.style.position = 'fixed';
+        cinemaImage.style.top = '0';
+        cinemaImage.style.left = '0';
+        cinemaImage.style.width = '100vw';
+        cinemaImage.style.height = '100vh';
+        cinemaImage.style.backgroundImage = 'url("/images/cinema.jpg")';
+        cinemaImage.style.backgroundSize = 'cover';
+        cinemaImage.style.backgroundPosition = 'center';
+        cinemaImage.style.backgroundRepeat = 'no-repeat';
+        cinemaImage.style.zIndex = '10000';
+
+        // Assurer que l'image prend tout l'écran
+        document.documentElement.style.height = '100%';
+        document.documentElement.style.width = '100%';
+        document.body.style.height = '100%';
+        document.body.style.width = '100%';
+
+        document.body.appendChild(cinemaImage);
     }
 } 
