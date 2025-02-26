@@ -139,8 +139,17 @@
 
         // Modifier la boucle de jeu pour vérifier les upgrades
         setInterval(() => {
-            gameState.money += gameState.perSecond;
-            updateDisplay();
+            // Vérifier si la chatbox est visible
+            const chatContainer = document.querySelector('.chat-container');
+            const isChatVisible = chatContainer &&
+                window.getComputedStyle(chatContainer).display !== 'none' &&
+                !chatContainer.classList.contains('exit');
+
+            // N'ajouter de l'argent que si la chatbox n'est pas visible
+            if (!isChatVisible) {
+                gameState.money += gameState.perSecond;
+                updateDisplay();
+            }
         }, 1000);
 
         // Initialisation
