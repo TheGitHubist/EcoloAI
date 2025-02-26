@@ -154,31 +154,26 @@ class ChatService {
     }
 
     async addMessage(text, isRobot = true) {
-        const messageElement = document.createElement('div');
-        messageElement.className = `message ${isRobot ? 'robot' : 'player'}`;
-
-        const textElement = document.createElement('span');
-        textElement.className = 'typing';
-        messageElement.appendChild(textElement);
-
+        // Vider le contenu précédent pour n'afficher que le message actuel
         this.messageContainer.innerHTML = '';
+
+        // Créer l'élément de message
+        const messageElement = document.createElement('div');
+        messageElement.className = isRobot ? 'message robot' : 'message user';
+
+        // Ajouter l'élément au DOM
         this.messageContainer.appendChild(messageElement);
 
-        this.isTyping = true;
-        this.currentTextElement = textElement;
-        this.fullText = text;
-
-        // Animation du texte qui s'écrit
-        let currentText = '';
-        this.nextButton.classList.add('visible'); // Toujours visible pour pouvoir skip
-
-        for (let i = 0; i < text.length && this.isTyping; i++) {
-            currentText += text[i];
-            textElement.textContent = currentText;
-            await this.sleep(30);
+        // Effet de machine à écrire pour les messages du robot
+        if (isRobot) {
+            this.isTyping = true;
+            this.typeWriterEffect(messageElement, text);
+        } else {
+            messageElement.textContent = text;
         }
 
-        this.isTyping = false;
+        // Assurer que la chatbox ne dépasse pas une hauteur maximale
+        this.adjustChatboxHeight();
     }
 
     finishCurrentMessage() {
@@ -541,26 +536,31 @@ class ChatService {
     }
 
     // Méthode d'effet machine à écrire pour le message final
-    typeWriterEffect(element, text, speed = 50) {
-        const messageElement = document.createElement('div');
-        messageElement.style.fontSize = '28px';
-        messageElement.style.color = 'white';
-        messageElement.style.textShadow = '0 0 15px rgba(255, 255, 255, 0.5)';
-        messageElement.style.background = 'rgba(0, 0, 0, 0.7)';
-        messageElement.style.padding = '20px';
-        messageElement.style.borderRadius = '20px';
-        messageElement.style.border = '1px solid rgba(255, 255, 255, 0.3)';
-        element.appendChild(messageElement);
-
-        let i = 0;
-        function type() {
-            if (i < text.length) {
-                messageElement.textContent += text.charAt(i);
-                i++;
-                setTimeout(type, speed);
-            }
+    typeWriterEffect(element, text, index = 0, speed = 30) {
+        // Assurer que le texte s'affiche correctement avec les sauts de ligne
+        if (index === 0) {
+            element.innerHTML = '';
         }
-        type();
+
+        if (index < text.length) {
+            // Gérer les sauts de ligne et les emojis correctement
+            if (text.charAt(index) === '\n') {
+                element.innerHTML += '<br>';
+            } else {
+                element.innerHTML += text.charAt(index);
+            }
+
+            // Continuer l'animation
+            setTimeout(() => {
+                this.typeWriterEffect(element, text, index + 1, speed);
+            }, speed);
+        } else {
+            this.isTyping = false;
+            this.nextButton.classList.add('visible');
+
+            // Ajuster la hauteur après l'affichage complet du texte
+            this.adjustChatboxHeight();
+        }
     }
 
     showNextMessage() {
@@ -570,6 +570,13 @@ class ChatService {
             if (this.currentDialogue === this.dialogues.firstUpgrade) {
                 this.showUpgradeChoices();
                 this.nextButton.style.display = 'none'; // Cacher le bouton pendant les choix
+                return;
+            } else if (this.currentDialogue === this.dialogues.ecoTrap) {
+                // Si c'est la fin du dialogue ecoTrap, forcer l'achat de la machine rapide
+                window.gameState.money -= 12000;
+                window.gameState.perSecond += 200;
+                window.updateDisplay();
+                this.robotExit();
                 return;
             } else if (this.currentDialogue === this.dialogues.secondUpgrade) {
                 this.showUpgradeChoicesSecond();
@@ -800,5 +807,20 @@ class ChatService {
         document.body.style.width = '100%';
 
         document.body.appendChild(cinemaImage);
+    }
+
+    // Nouvelle méthode pour ajuster la hauteur de la chatbox
+    adjustChatboxHeight() {
+        // Définir une hauteur maximale pour la chatbox
+        const maxHeight = 300; // en pixels
+
+        // Vérifier si le contenu dépasse la hauteur maximale
+        if (this.messageContainer.scrollHeight > maxHeight) {
+            this.messageContainer.style.height = maxHeight + 'px';
+            this.messageContainer.style.overflowY = 'auto';
+        } else {
+            this.messageContainer.style.height = 'auto';
+            this.messageContainer.style.overflowY = 'visible';
+        }
     }
 } 
