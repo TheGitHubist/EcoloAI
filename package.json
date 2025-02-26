@@ -1,0 +1,12 @@
+{
+    "name": "web-play-button",
+    "version": "1.0.0",
+    "description": "Une page web simple avec un bouton play",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2"
+    }
+}

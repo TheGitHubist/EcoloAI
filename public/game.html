@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Jeu</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('/images/game-background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 24px;
+            overflow: hidden;
+            /* Pour éviter les barres de défilement pendant l'animation */
+        }
+
+        .game-content {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 1s forwards;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1000;
+            animation: slideOutTransition 1s ease-in-out forwards;
+        }
+
+        @keyframes slideOutTransition {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-100%);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .score-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+        }
+
+        .money {
+            font-size: 32px;
+            color: #4CAF50;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+        }
+
+        .per-second {
+            font-size: 18px;
+            color: #81C784;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="transition-overlay"></div>
+    <div class="game-content">
+        <div>Page du jeu - En construction</div>
+    </div>
+    <div class="score-container">
+        <div class="money" id="moneyDisplay">10.00K</div>
+        <div class="per-second" id="perSecondDisplay">+100/s</div>
+    </div>
+
+    <script>
+        // Fonction pour formater les nombres
+        function formatNumber(num) {
+            if (num >= 1000000000) {
+                return (num / 1000000000).toFixed(2) + 'B';
+            } else if (num >= 1000000) {
+                return (num / 1000000).toFixed(2) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(2) + 'K';
+            }
+            return num.toFixed(2);
+        }
+
+        // Variables du jeu
+        let money = 10000;
+        const perSecond = 100;
+
+        // Mise à jour de l'affichage
+        function updateDisplay() {
+            document.getElementById('moneyDisplay').textContent = formatNumber(money);
+            document.getElementById('perSecondDisplay').textContent = `+${formatNumber(perSecond)}/s`;
+        }
+
+        // Boucle de jeu
+        setInterval(() => {
+            money += perSecond;
+            updateDisplay();
+        }, 1000);
+
+        // Initialisation
+        updateDisplay();
+    </script>
+</body>
+
+</html>
