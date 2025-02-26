@@ -760,16 +760,15 @@ class ChatService {
         document.body.style.backgroundColor = 'black';
 
         // Créer l'élément d'image en plein écran
-        const cinemaImage = document.createElement('div');
+        const cinemaImage = document.createElement('img');
+        cinemaImage.src = "/images/cinema.jpg";
         cinemaImage.style.position = 'fixed';
         cinemaImage.style.top = '0';
         cinemaImage.style.left = '0';
-        cinemaImage.style.width = '100vw';
-        cinemaImage.style.height = '100vh';
-        cinemaImage.style.backgroundImage = 'url("/images/cinema.jpg")';
-        cinemaImage.style.backgroundSize = 'cover';
-        cinemaImage.style.backgroundPosition = 'center';
-        cinemaImage.style.backgroundRepeat = 'no-repeat';
+        cinemaImage.style.width = '100%';
+        cinemaImage.style.height = '100%';
+        cinemaImage.style.objectFit = 'contain'; // Assure que l'image est entièrement visible
+        cinemaImage.style.backgroundColor = 'black'; // Fond noir autour de l'image
         cinemaImage.style.zIndex = '10000';
 
         // Assurer que l'image prend tout l'écran
