@@ -118,7 +118,12 @@
         window.gameState = {
             money: 10000,
             perSecond: 100,
-            hasUpgrade: false
+            hasUpgrade: false,
+<<<<<<< HEAD
+            autoIncomeActive: false  // Désactivé au début car la chatbox est visible
+=======
+            isRobiPresent: true
+>>>>>>> 04d12591873b06a02a48230ea2bd6c967df0f183
         };
 
         window.formatNumber = function (num) {
@@ -137,11 +142,27 @@
             document.getElementById('perSecondDisplay').textContent = `+${formatNumber(gameState.perSecond)}/s`;
         }
 
-        // Modifier la boucle de jeu pour vérifier les upgrades
+<<<<<<< HEAD
+        // Modifier la boucle de jeu pour vérifier si le gain automatique est actif
         setInterval(() => {
-            gameState.money += gameState.perSecond;
-            updateDisplay();
+            if (window.gameState.autoIncomeActive) {
+                gameState.money += gameState.perSecond;
+                updateDisplay();
+            }
         }, 1000);
+=======
+        // Fonction pour ajouter de l'argent automatiquement
+        function addMoneyPerSecond() {
+            // Ne pas ajouter d'argent si Robi est présent
+            if (!gameState.isRobiPresent) {
+                gameState.money += gameState.perSecond / 10; // Diviser par 10 pour 10 updates par seconde
+                updateDisplay();
+            }
+        }
+
+        // Mettre à jour l'argent 10 fois par seconde
+        setInterval(addMoneyPerSecond, 100);
+>>>>>>> 04d12591873b06a02a48230ea2bd6c967df0f183
 
         // Initialisation
         updateDisplay();
@@ -152,6 +173,11 @@
             setTimeout(() => {
                 chatService.playDialogue('welcome');
             }, 2500);
+        });
+
+        // Après l'initialisation du chat, activer le gain automatique quand le robot part
+        chatService.onRobotExit(() => {
+            window.gameState.autoIncomeActive = true;
         });
     </script>
 </body>
