@@ -9,6 +9,11 @@ class ChatService {
         this.hasTriggeredFirstUpgrade = false;
         this.hasTriggeredSecondUpgrade = false;
         this.hasTriggeredThirdUpgrade = false;
+        this.isRobiPresent = true;
+
+        // Informer le jeu que Robi est présent
+        window.gameState.isRobiPresent = true;
+
         this.dialogues = {
             welcome: [
                 "Hey! 👋 Je suis ROBI, ton nouvel assistant personnel!",
@@ -197,18 +202,27 @@ class ChatService {
         const robotContainer = document.querySelector('.robot-container');
         const chatContainer = document.querySelector('.chat-container');
 
-        // Ajouter la classe pour l'animation de sortie
         robotContainer.classList.add('exit');
         chatContainer.classList.add('exit');
 
-        // Nettoyer les éléments après l'animation et afficher le bouton clicker
+        // Afficher le bouton clicker après le départ de Robi
         setTimeout(() => {
+<<<<<<< HEAD
             robotContainer.style.display = 'none';
             chatContainer.style.display = 'none';
             this.showClickerButton();
             // Activer le gain d'argent automatique
             window.gameState.autoIncomeActive = true;
         }, 2000);
+=======
+            const clickerButton = document.getElementById('clickerButton');
+            if (clickerButton) clickerButton.style.display = 'block';
+
+            // Indiquer que Robi n'est plus présent
+            this.isRobiPresent = false;
+            window.gameState.isRobiPresent = false;
+        }, 1000);
+>>>>>>> 04d12591873b06a02a48230ea2bd6c967df0f183
     }
 
     showClickerButton() {
@@ -691,8 +705,14 @@ class ChatService {
         if (window.gameState.money >= 60000 && !this.hasTriggeredThirdUpgrade && this.hasTriggeredSecondUpgrade) {
             this.hasTriggeredThirdUpgrade = true;
 
+<<<<<<< HEAD
             // Désactiver le gain d'argent automatique
             window.gameState.autoIncomeActive = false;
+=======
+            // Indiquer que Robi est présent
+            this.isRobiPresent = true;
+            window.gameState.isRobiPresent = true;
+>>>>>>> 04d12591873b06a02a48230ea2bd6c967df0f183
 
             // Cacher le bouton clicker
             const clickerButton = document.getElementById('clickerButton');
@@ -724,8 +744,14 @@ class ChatService {
         if (window.gameState.money >= 25000 && !this.hasTriggeredSecondUpgrade && this.hasTriggeredFirstUpgrade) {
             this.hasTriggeredSecondUpgrade = true;
 
+<<<<<<< HEAD
             // Désactiver le gain d'argent automatique
             window.gameState.autoIncomeActive = false;
+=======
+            // Indiquer que Robi est présent
+            this.isRobiPresent = true;
+            window.gameState.isRobiPresent = true;
+>>>>>>> 04d12591873b06a02a48230ea2bd6c967df0f183
 
             // Cacher le bouton clicker
             const clickerButton = document.getElementById('clickerButton');
@@ -754,12 +780,17 @@ class ChatService {
             return;
         }
 
-        // Vérification existante pour le premier upgrade
         if (window.gameState.money >= 15000 && !this.hasTriggeredFirstUpgrade) {
             this.hasTriggeredFirstUpgrade = true;
 
+<<<<<<< HEAD
             // Désactiver le gain d'argent automatique
             window.gameState.autoIncomeActive = false;
+=======
+            // Indiquer que Robi est présent
+            this.isRobiPresent = true;
+            window.gameState.isRobiPresent = true;
+>>>>>>> 04d12591873b06a02a48230ea2bd6c967df0f183
 
             // Cacher le bouton clicker
             const clickerButton = document.getElementById('clickerButton');
