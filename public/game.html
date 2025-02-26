@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Le Jeu</title>
+    <link rel="stylesheet" href="/css/game.css">
     <style>
         body {
             margin: 0;
@@ -89,17 +90,38 @@
 
 <body>
     <div class="transition-overlay"></div>
-    <div class="game-content">
-        <div>Page du jeu - En construction</div>
+
+    <!-- Robot et Chat -->
+    <div class="robot-container">
+        <img src="/images/robot.png" alt="Assistant Robot" class="robot-image">
     </div>
+    <div class="chat-container">
+        <div class="chat-messages"></div>
+        <button class="next-button" id="nextButton">Suivant ➜</button>
+    </div>
+
+    <!-- Score -->
     <div class="score-container">
         <div class="money" id="moneyDisplay">10.00K</div>
         <div class="per-second" id="perSecondDisplay">+100/s</div>
     </div>
 
+    <!-- Ajouter après la div score-container -->
+    <button class="clicker-button" id="clickerButton" style="display: none;">
+        <span>Produire</span>
+        <span style="font-size: 16px;">+50€ par clic</span>
+    </button>
+
+    <script src="/js/chatService.js"></script>
     <script>
-        // Fonction pour formater les nombres
-        function formatNumber(num) {
+        // Déplacer les variables et fonctions dans l'objet window pour les rendre globales
+        window.gameState = {
+            money: 10000,
+            perSecond: 100,
+            hasUpgrade: false
+        };
+
+        window.formatNumber = function (num) {
             if (num >= 1000000000) {
                 return (num / 1000000000).toFixed(2) + 'B';
             } else if (num >= 1000000) {
@@ -110,24 +132,27 @@
             return num.toFixed(2);
         }
 
-        // Variables du jeu
-        let money = 10000;
-        const perSecond = 100;
-
-        // Mise à jour de l'affichage
-        function updateDisplay() {
-            document.getElementById('moneyDisplay').textContent = formatNumber(money);
-            document.getElementById('perSecondDisplay').textContent = `+${formatNumber(perSecond)}/s`;
+        window.updateDisplay = function () {
+            document.getElementById('moneyDisplay').textContent = formatNumber(gameState.money);
+            document.getElementById('perSecondDisplay').textContent = `+${formatNumber(gameState.perSecond)}/s`;
         }
 
-        // Boucle de jeu
+        // Modifier la boucle de jeu pour vérifier les upgrades
         setInterval(() => {
-            money += perSecond;
+            gameState.money += gameState.perSecond;
             updateDisplay();
         }, 1000);
 
         // Initialisation
         updateDisplay();
+
+        // Initialisation du chat
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatService = new ChatService();
+            setTimeout(() => {
+                chatService.playDialogue('welcome');
+            }, 2500);
+        });
     </script>
 </body>
 
